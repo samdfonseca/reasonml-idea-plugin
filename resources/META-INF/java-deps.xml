@@ -1,7 +1,23 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <sdkType implementation="com.reason.ide.sdk.OCamlSDK"/>
+
+        <!--
+         | Repl
+         -->
+
         <configurationType implementation="com.reason.ide.repl.ReplRunConfigurationType"/>
+
+        <!--
+         | Debug
+         -->
+
+        <xdebugger.breakpointType implementation="com.reason.ide.debug.ORLineBreakpointType"/>
+
+        <programRunner implementation="com.reason.ide.debug.OClDebugRunner"/>
+        <configurationType implementation="com.reason.ide.debug.conf.OclApplicationRunConfigurationType"/>
+        <runConfigurationProducer implementation="com.reason.ide.debug.conf.OclApplicationConfigurationProducer"/>
+
     </extensions>
     <project-components>
         <component>

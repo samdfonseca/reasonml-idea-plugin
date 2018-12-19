@@ -1,4 +1,4 @@
-package com.reason.ide.debug;
+package com.reason.ide.debug.conf;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.CommandLineState;
@@ -9,14 +9,17 @@ import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
+import com.reason.ide.debug.conf.OClApplicationConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class OCamlApplicationRunningState extends CommandLineState {
+public class OClApplicationRunningState extends CommandLineState {
     private final Module m_module;
+    private final OClApplicationConfiguration m_configuration;
 
-    protected OCamlApplicationRunningState(ExecutionEnvironment environment, Module module) {
+    OClApplicationRunningState(ExecutionEnvironment environment, Module module, OClApplicationConfiguration configuration) {
         super(environment);
         m_module = module;
+        m_configuration = configuration;
     }
 
     @NotNull
