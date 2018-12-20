@@ -1,4 +1,4 @@
-package com.reason.lang.core;
+package com.reason.lang;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -40,7 +40,7 @@ public class RmlElementFactory {
     }
 
     @NotNull
-    private static FileBase createFileFromText(@NotNull Project project, @NotNull String text) {
+    public static FileBase createFileFromText(@NotNull Project project, @NotNull String text) {
         return (FileBase) PsiFileFactory.getInstance(project).createFileFromText("Dummy.re", RmlLanguage.INSTANCE, text);
     }
 }

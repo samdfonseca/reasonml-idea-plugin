@@ -266,6 +266,9 @@
         <completion.contributor language="Mly"
                                 implementationClass="com.reason.ide.insight.OclKeywordCompletionContributor"/>
 
+        <projectService serviceInterface="com.reason.lang.OclCodeFragmentFactory"
+                        serviceImplementation="com.reason.lang.OclCodeFragmentFactory"/>
+
         <!--<codeInsight.parameterNameHints language="Reason" implementationClass="SignatureProvider"/>-->
         <editor.linePainter implementation="com.reason.ide.hints.OREditorLinePainter"/>
 

@@ -3,7 +3,7 @@ package com.reason.ide.intentions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.reason.lang.core.RmlElementFactory;
+import com.reason.lang.RmlElementFactory;
 import com.reason.lang.core.psi.PsiFunction;
 import com.reason.lang.core.psi.PsiFunctionBody;
 import com.reason.lang.core.psi.PsiLet;

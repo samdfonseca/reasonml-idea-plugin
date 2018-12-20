@@ -3,7 +3,7 @@ package com.reason.lang.core.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import com.reason.lang.core.RmlElementFactory;
+import com.reason.lang.RmlElementFactory;
 import com.reason.lang.core.psi.PsiLetName;
 import com.reason.lang.core.type.ORTypes;
 import org.jetbrains.annotations.NotNull;

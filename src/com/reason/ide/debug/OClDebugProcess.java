@@ -2,8 +2,6 @@ package com.reason.ide.debug;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
@@ -13,55 +11,44 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.reason.ide.debug.conf.OClApplicationConfiguration;
-import com.reason.ide.debug.conf.OClApplicationRunningState;
-import com.reason.ide.files.OclFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class OClDebugProcess extends XDebugProcess {
 
     private static final Logger LOG = Logger.getInstance("ReasonML.debug");
+    private OclDebuggerEditorsProvider m_editorsProvider;
 
-    private final OClApplicationRunningState m_runningState;
+//    private final OClApplicationRunningState m_runningState;
 
-    OClDebugProcess(@NotNull XDebugSession session, ExecutionEnvironment environment) throws ExecutionException {
+    public static OClDebugProcess create(@NotNull XDebugSession session, @NotNull ExecutionEnvironment environment) {
+        return new OClDebugProcess(session, environment);
+    }
+
+    private OClDebugProcess(@NotNull XDebugSession session, @NotNull ExecutionEnvironment environment) {
         super(session);
+        m_editorsProvider = new OclDebuggerEditorsProvider();
+    }
 
-        OClApplicationConfiguration runConfig = (OClApplicationConfiguration) getSession().getRunProfile();
-        if (runConfig != null) {
-            m_runningState = (OClApplicationRunningState) runConfig.getState(environment.getExecutor(), environment);
-            if (m_runningState == null) {
-                throw new ExecutionException("Failed to execute a run configuration.");
-            }
-        } else {
-            throw new ExecutionException("Failed to find a run configuration.");
-        }
+    @NotNull
+    @Override
+    public XDebuggerEditorsProvider getEditorsProvider() {
+        return m_editorsProvider;
     }
 
     @NotNull
     @Override
     public ExecutionConsole createConsole() {
-        TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(m_runningState.getEnvironment().getProject());
-        ConsoleView consoleView = consoleBuilder.getConsole();
+        ConsoleView console = (ConsoleView) super.createConsole();
 
-        ProcessHandler m_processHandler = getProcessHandler();
-        m_processHandler.addProcessListener(new ProcessListener() {
+        getProcessHandler().addProcessListener(new ProcessListener() {
             @Override
             public void startNotified(@NotNull ProcessEvent event) {
-                consoleView.print("Connected to the OCaml debugger\n", ConsoleViewContentType.SYSTEM_OUTPUT);
+                console.print("Connected to the OCaml debugger\n", ConsoleViewContentType.SYSTEM_OUTPUT);
             }
 
             @Override
@@ -74,41 +61,23 @@ public class OClDebugProcess extends XDebugProcess {
 
             @Override
             public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
-                consoleView.print(event.getText(), ConsoleViewContentType.getConsoleViewType(outputType));
+                console.print(event.getText(), ConsoleViewContentType.getConsoleViewType(outputType));
             }
         });
-        m_processHandler.startNotify();
 
-        return consoleView;
-    }
-
-    @NotNull
-    @Override
-    public XDebuggerEditorsProvider getEditorsProvider() {
-        return new XDebuggerEditorsProvider() {
-            @NotNull
-            @Override
-            public FileType getFileType() {
-                return OclFileType.INSTANCE;
-            }
-
-            @NotNull
-            @Override
-            public Document createDocument(@NotNull Project project,
-                                           @NotNull XExpression expression,
-                                           @Nullable XSourcePosition sourcePosition,
-                                           @NotNull EvaluationMode mode) {
-                LightVirtualFile file = new LightVirtualFile("ocaml-debugger.txt", expression.getExpression());
-                return FileDocumentManager.getInstance().getDocument(file);
-            }
-        };
+        return console;
     }
 
     @Nullable
     @Override
     protected ProcessHandler doGetProcessHandler() {
         try {
-            GeneralCommandLine commandLine = m_runningState.getCommand();
+            System.out.println("OClDebugProcess.doGetProcessHandler");
+//            GeneralCommandLine commandLine = m_runningState.getCommand();
+            GeneralCommandLine commandLine = new GeneralCommandLine();
+            // set exe/working dir/...
+//            String workDirectory = m_configuration.getWorkDirectory();
+            commandLine.withWorkDirectory("/home/herve/dev/projects/ocld");
             commandLine.setExePath("ocamldebug");
             commandLine.addParameters("a.out");
 
