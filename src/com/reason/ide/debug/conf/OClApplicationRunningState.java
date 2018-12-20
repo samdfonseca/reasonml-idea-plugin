@@ -3,13 +3,11 @@ package com.reason.ide.debug.conf;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
-import com.reason.ide.debug.conf.OClApplicationConfiguration;
+import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class OClApplicationRunningState extends CommandLineState {
@@ -29,12 +27,12 @@ public class OClApplicationRunningState extends CommandLineState {
         return new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
     }
 
-    private GeneralCommandLine getCommand() {
+    public GeneralCommandLine getCommand() {
         GeneralCommandLine commandLine = new GeneralCommandLine();
         // set exe/working dir/...
-        TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(m_module.getProject());
-        setConsoleBuilder(consoleBuilder);
+        String workDirectory = m_configuration.getWorkDirectory();
+        commandLine.withWorkDirectory(StringUtil.isEmpty(workDirectory) ? m_module.getProject().getBasePath() : workDirectory);
+
         return commandLine;
     }
-
 }

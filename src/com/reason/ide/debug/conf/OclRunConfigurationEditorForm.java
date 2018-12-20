@@ -6,7 +6,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.reason.ide.debug.conf.OClApplicationConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public class OclRunConfigurationEditorForm extends SettingsEditor<OClApplication
     }
 
     @Override
-    protected void applyEditorTo(@NotNull OClApplicationConfiguration s) {
-
+    protected void applyEditorTo(@NotNull OClApplicationConfiguration configuration) {
+        configuration.setWorkDirectory(c_workingDir.getText());
     }
 }
