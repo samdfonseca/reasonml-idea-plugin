@@ -325,7 +325,8 @@
          -->
 
         <toolWindow id="Bucklescript" anchor="bottom" icon="/icons/bucklescript.png"
-                    factoryClass="com.reason.ide.console.BsToolWindowFactory"/>
+                    factoryClass="com.reason.ide.console.BsToolWindowFactory"
+                    conditionClass="com.reason.ide.console.BsToolWindowCondition"/>
 
         <codeInsight.parameterInfo language="Reason"
                                    implementationClass="com.reason.ide.hints.ORParameterInfoHandlerWithTabActionSupport"/>
